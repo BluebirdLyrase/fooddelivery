@@ -19,7 +19,7 @@ firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
 
 //Moniter authen status
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     // User is signed in.
     var displayName = user.displayName;
@@ -62,10 +62,10 @@ document.addEventListener('init', function (event) {
                 </ons-carousel-item>`;
         $('#carousel').append(carousel);
         //` ` for ต่อ string
-    
+
       });
     });
-    
+
     db.collection("category").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         //object
@@ -82,7 +82,7 @@ document.addEventListener('init', function (event) {
           </ons-col>`;
         $('#category').append(category);
         //` ` for ต่อ string
-    
+
       });
     });
     console.log("homePage");
@@ -103,12 +103,12 @@ document.addEventListener('init', function (event) {
     $("#logout").click(function () {
       $("#content")[0].load("home.html");
       $("#sidemenu")[0].close();
-    firebase.auth().signOut().then(function() {
-      // Sign-out successful.
-    }).catch(function(error) {
-      // An error happened.
+      firebase.auth().signOut().then(function () {
+        // Sign-out successful.
+      }).catch(function (error) {
+        // An error happened.
+      });
     });
-  });
 
     $("#home").click(function () {
       $("#content")[0].load("home.html");
@@ -119,10 +119,10 @@ document.addEventListener('init', function (event) {
   if (page.id === 'loginPage') {
     console.log("loginPage");
 
-    $("#signinbtn").click(function(){
+    $("#signinbtn").click(function () {
       var username = $("#username").val();
       var password = $("#password").val();
-      firebase.auth().signInWithEmailAndPassword(username, password).catch(function(error){
+      firebase.auth().signInWithEmailAndPassword(username, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -133,8 +133,25 @@ document.addEventListener('init', function (event) {
 
     });
 
-
-
+    var provider = new firebase.auth.GoogleAuthProvider();
+    $("#googlebtn").click(function () {
+      firebase.auth().signInWithPopup(provider).then(function (result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        // ...
+      }).catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+      });
+    });
 
     $("#backhomebtn").click(function () {
       $("#content")[0].load("home.html");
